@@ -1,31 +1,45 @@
 #!/usr/bin/env bash
 
 # Enable SSL
-cp /etc/apache2/mods-available/ssl.load /etc/apache2/mods-enabled/ssl.load
-cp /etc/apache2/mods-available/ssl.conf /etc/apache2/mods-enabled/ssl.conf
-cp /etc/apache2/mods-available/socache_shmcb.load /etc/apache2/mods-enabled/socache_shmcb.load
+cp /etc/apache2/mods-available/ssl.load /etc/apache2/mods-enabled/ssl.load;
+cp /etc/apache2/mods-available/ssl.conf /etc/apache2/mods-enabled/ssl.conf;
+cp /etc/apache2/mods-available/socache_shmcb.load /etc/apache2/mods-enabled/socache_shmcb.load;
 
 # Remove unused virtual hosts
-rm -rf /etc/apache2/sites-available/*
-rm -rf /etc/apache2/sites-enabled/*
+rm -rf /etc/apache2/sites-available/*;
+rm -rf /etc/apache2/sites-enabled/*;
 
 # Add virtual host
-cp /var/www/tcn/site.conf /etc/apache2/sites-available/site.conf
-ln -s /etc/apache2/sites-available/site.conf /etc/apache2/sites-enabled/site.conf
+cp /var/www/my-site/site.conf /etc/apache2/sites-available/site.conf;
+ln -s /etc/apache2/sites-available/site.conf /etc/apache2/sites-enabled/site.conf;
+
+# Create database
+mysql -uroot -proot -e "create database mydatabase";
+
+# Import the most recent DB dump if it exists
+if [ -e "/var/www/my-site/backups/mydatabase_latest.sql" ]; then
+	mysql -uroot -proot mydatabase < /var/www/my-site/backups/mydatabase_latest.sql.sql;
+fi
+
+# Set up DB Backups cron for every 30 minutes
+chmod +x /var/www/my-site/scripts/vagrantDbBackups.sh;
+echo "*/30 * * * * /var/www/my-site/scripts/vagrantDbBackups.sh >/dev/null 2>&1" >> cron;
+crontab cron;
+rm cron;
 
 # Set up XDebug if it hasn't been setup yet
 if [ ! -f /var/log/xdebugsetup ];
 	then
 		# Install PHP5 Dev
-		sudo apt-get update
-		sudo apt-get -y install php5-dev
+		sudo apt-get update;
+		sudo apt-get -y install php5-dev;
 
 		# Add XDebug Log Directories
-		mkdir /var/log/xdebug
-		chown www-data:www-data /var/log/xdebug
+		mkdir /var/log/xdebug;
+		chown www-data:www-data /var/log/xdebug;
 
 		# Install XDebug
-		sudo pecl install xdebug
+		sudo pecl install xdebug;
 
 		# Write XDebug config
 		echo '' >> /etc/php5/apache2/php.ini

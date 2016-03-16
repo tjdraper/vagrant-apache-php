@@ -6,7 +6,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	config.vm.box = "scotch/box"
 
 	# Create a private network
-	config.vm.network "private_network", ip: "192.168.10.11"
+	config.vm.network "private_network", ip: "192.168.56.102"
 
 	# Share directory with the VM via NFS
 	config.vm.synced_folder "/Users/[user]/Sites/my-site", "/var/www/my-site"
@@ -21,9 +21,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 	end
 
 	# Run shell script provisioning on first box boot
-	config.vm.provision :shell, path: "vagrant-provision.sh"
+	config.vm.provision :shell, path: "scripts/vagrantProvision.sh"
 
 	# Run a script at every boot
-	config.vm.provision :shell, path: "vagrant-start.sh", run: "always", privileged: true
+	config.vm.provision :shell, path: "scripts/vagrantStart.sh", run: "always", privileged: true
 
 end
