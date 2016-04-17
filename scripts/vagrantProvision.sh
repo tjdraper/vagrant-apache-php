@@ -10,20 +10,20 @@ rm -rf /etc/apache2/sites-available/*;
 rm -rf /etc/apache2/sites-enabled/*;
 
 # Add virtual host
-cp /var/www/development/scripts/site.conf /etc/apache2/sites-available/site.conf;
+cp /vagrant/scripts/site.conf /etc/apache2/sites-available/site.conf;
 ln -s /etc/apache2/sites-available/site.conf /etc/apache2/sites-enabled/site.conf;
 
 # Create database
 mysql -uroot -proot -e "create database site";
 
 # Import the most recent DB dump if it exists
-if [ -e "/var/www/development/backups/site_latest.sql" ]; then
-	mysql -uroot -proot site < /var/www/development/backups/site_latest.sql;
+if [ -e "/vagrant/backups/site_latest.sql" ]; then
+	mysql -uroot -proot site < /vagrant/backups/site_latest.sql;
 fi
 
 # Set up DB Backups cron for every 30 minutes
-chmod +x /var/www/development/scripts/vagrantDbBackups.sh;
-echo "*/30 * * * * /var/www/development/scripts/vagrantDbBackups.sh >/dev/null 2>&1" >> cron;
+chmod +x /vagrant/scripts/vagrantDbBackups.sh;
+echo "*/30 * * * * /vagrant/scripts/vagrantDbBackups.sh >/dev/null 2>&1" >> cron;
 crontab cron;
 rm cron;
 
