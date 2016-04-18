@@ -1,0 +1,1 @@
+alias localBackup='. /home/vagrant/scripts/vagrantDbBackups.sh';

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
 # Enable SSL
-cp /etc/apache2/mods-available/ssl.load /etc/apache2/mods-enabled/ssl.load;
-cp /etc/apache2/mods-available/ssl.conf /etc/apache2/mods-enabled/ssl.conf;
-cp /etc/apache2/mods-available/socache_shmcb.load /etc/apache2/mods-enabled/socache_shmcb.load;
+sudo cp /etc/apache2/mods-available/ssl.load /etc/apache2/mods-enabled/ssl.load;
+sudo cp /etc/apache2/mods-available/ssl.conf /etc/apache2/mods-enabled/ssl.conf;
+sudo cp /etc/apache2/mods-available/socache_shmcb.load /etc/apache2/mods-enabled/socache_shmcb.load;
 
 # Remove unused virtual hosts
-rm -rf /etc/apache2/sites-available/*;
-rm -rf /etc/apache2/sites-enabled/*;
+sudo rm -rf /etc/apache2/sites-available/*;
+sudo rm -rf /etc/apache2/sites-enabled/*;
 
 # Add virtual host
-cp /vagrant/scripts/site.conf /etc/apache2/sites-available/site.conf;
-ln -s /etc/apache2/sites-available/site.conf /etc/apache2/sites-enabled/site.conf;
+sudo cp /vagrant/scripts/site.conf /etc/apache2/sites-available/site.conf;
+sudo ln -s /etc/apache2/sites-available/site.conf /etc/apache2/sites-enabled/site.conf;
 
 # Create database
 mysql -uroot -proot -e "create database site";

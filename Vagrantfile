@@ -6,6 +6,8 @@ VAGRANTFILE_API_VERSION ||= "2"
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
+	config.vm.provision "file", source: "scripts/vagrantAliases", destination: "~/.bash_aliases"
+
 	# Use the Scotch Box https://box.scotch.io/
 	config.vm.box = "scotch/box"
 
